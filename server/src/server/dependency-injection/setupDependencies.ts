@@ -24,5 +24,9 @@ export default async function setupDependencies() {
       const wrappedController = wrapDependency(controller, domainData.name);
       await Container.instance.register(wrappedController);
     }
+
+    for (const eventWatcher of domainData.eventWatchers || []) {
+      await Container.instance.register(eventWatcher);
+    }
   }
 }

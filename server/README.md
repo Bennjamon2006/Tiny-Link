@@ -26,20 +26,25 @@ Mapper → Entity
 
 ```
 
+Claro, aquí tienes la tabla actualizada con los componentes que has integrado recientemente, incluyendo el sistema de eventos y los decoradores de DI:
+
+---
+
 ### Componentes clave
 
-| Componente        | Responsabilidad                                                                                                                |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `Entity`          | Representa entidades del dominio; maneja hooks `presave`, generación de `id` y timestamps.                                     |
-| `Mapper`          | Convierte entre `Entity` y objetos de persistencia (`PersistenceUser`) o exposición (`ExposedUser`).                           |
-| `Validator`       | Validaciones de negocio, con posibilidad de usar subclases como singletons estáticos.                                          |
-| `Middleware`      | Clases abstractas que pueden modificar `Request` o retornar un `Response`. Integradas con Express mediante `splitMiddlewares`. |
-| `Controller`      | Expone endpoints HTTP, recibe `Request` y devuelve `Response`.                                                                 |
-| `Service`         | Contiene lógica de negocio, no sabe nada de HTTP ni MongoDB.                                                                   |
-| `Repository`      | Acceso a datos, transforma `PersistenceUser` a `User`.                                                                         |
-| `DataSource`      | Abstracción de la capa de persistencia. Aquí MongoDataSource maneja todas las operaciones MongoDB.                             |
-| `Domain`          | Agrupa dependencias, controladores y servicios en módulos independientes.                                                      |
-| `Custom Response` | Clases como `Ok`, `Created`, etc., encapsulan `status`, `body` y `headers`.                                                    |
+| Componente        | Responsabilidad                                                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `Entity`          | Representa entidades del dominio; maneja hooks `presave`, generación de `id` y timestamps.                                            |
+| `Mapper`          | Convierte entre `Entity` y objetos de persistencia (`PersistenceUser`) o exposición (`ExposedUser`).                                  |
+| `Validator`       | Validaciones de negocio; subclases pueden funcionar como singletons con método estático `validate`.                                   |
+| `Middleware`      | Clases abstractas que pueden modificar `Request` o retornar un `Response`. Se integran con Express mediante `splitMiddlewares`.       |
+| `Controller`      | Expone endpoints HTTP, recibe `Request` y devuelve `Response`.                                                                        |
+| `Service`         | Contiene lógica de negocio, no conoce HTTP ni MongoDB.                                                                                |
+| `Repository`      | Acceso a datos; transforma objetos de persistencia a entidades del dominio y viceversa.                                               |
+| `DataSource`      | Abstracción de la capa de persistencia; `MongoDataSource` maneja operaciones MongoDB de forma genérica.                               |
+| `Domain`          | Agrupa dependencias, controladores, servicios y event watchers en módulos independientes y autocontenidos.                            |
+| `Decoradores DI`  | `@Injectable`, `@Inject`, `@Domain`, `@Controller`, `@Get`, `@Post` para resolver dependencias, registrar rutas y configurar módulos. |
+| `Custom Response` | Clases como `Ok`, `Created`, etc., encapsulan `status`, `body` y `headers` para estandarizar respuestas HTTP.                         |
 
 ---
 
@@ -85,6 +90,46 @@ public async createUser(req: Request): Promise<Response> {
 
 ---
 
+Perfecto, aquí tienes el apartado agregado a tu documentación:
+
+---
+
+### Sistema de Eventos
+
+El sistema de eventos permite la comunicación desacoplada entre distintos dominios y módulos de la aplicación, siguiendo un enfoque inspirado en Event-Driven Architecture (EDA).
+
+| Componente            | Responsabilidad                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `Event`               | Clase base para todos los eventos; cada evento puede transportar un `payload` con la información relevante.        |
+| `EventBus`            | Centraliza la emisión de eventos y el registro de listeners; ofrece métodos `emit` y `emitSync`.                   |
+| `EventWatcher`        | Clases que escuchan eventos; se registran automáticamente mediante el decorador `@EventWatcher`.                   |
+| `@OnEvent()`          | Decorador para métodos dentro de un `EventWatcher`; vincula el método a un tipo específico de `Event`.             |
+| `ListenerData`        | Metadata interna que almacena la relación entre evento y método escuchador.                                        |
+| `loadEventWatchers()` | Función que recorre todos los dominios, registra instancias de `EventWatcher` en el `EventBus` y enlaza listeners. |
+
+**Flujo básico de eventos:**
+
+1. Un dominio o servicio emite un evento usando `EventBus.emit(event)`.
+2. El `EventBus` identifica todos los listeners registrados para el tipo de evento.
+3. Cada `EventWatcher` correspondiente ejecuta su método asociado al evento, pasando el `payload` recibido.
+4. Esto permite que diferentes dominios reaccionen a cambios sin depender directamente unos de otros.
+
+**Ejemplo:**
+
+```ts
+@EventWatcher()
+export default class UsersEventWatcher {
+  @OnEvent()
+  public onUserCreated(event: UserCreatedEvent) {
+    console.log(`User #${event.payload.id} created: ${event.payload.username}`);
+  }
+}
+```
+
+Este mecanismo permite **extender la funcionalidad de la aplicación** sin modificar los módulos emisores, cumpliendo con los principios de **Open-Closed** y manteniendo un diseño **SOLID** y altamente testeable.
+
+---
+
 ## Decoradores
 
 - `@Domain()` → Define un módulo con dependencias y controladores.
@@ -92,6 +137,8 @@ public async createUser(req: Request): Promise<Response> {
 - `@Get()`, `@Post()`, etc. → Define rutas dentro de un controlador.
 - `@Inject()` → Inyección de dependencias en constructor.
 - `@Injectable()` → Marca clases para inyección automática.
+- `@EventWatcher()` → Marca clases para la escucha de eventos
+- `@OnEvent` → Define un método específico para escuchar cierto tipo de evento. (El tipo de evento se infiere en el tipo de dato del **único** parámetro)
 
 ---
 
@@ -115,7 +162,6 @@ public async createUser(req: Request): Promise<Response> {
 
 ## Futuro
 
-- Implementar **EventBus** para eventos de dominio.
 - Agregar más validadores y middlewares reutilizables.
 - Posible abstracción de DataSource para otros tipos de bases de datos.
 - Sistema de logging más completo y métricas.

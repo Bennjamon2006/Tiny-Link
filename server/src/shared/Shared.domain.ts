@@ -3,6 +3,7 @@ import { MongoConnectionFactory } from "./infrastructure/mongo/MongoConnectionFa
 import Domain from "./decorators/Domain";
 import WinstonLogger from "./infrastructure/Logger/WinstonLogger";
 import Logger from "./domain/Logger";
+import InMemoryEventBus from "./infrastructure/EventBus/InMemoryEventBus";
 
 @Domain({
   name: "Shared",
@@ -20,6 +21,7 @@ import Logger from "./domain/Logger";
       },
       args: [MongoConfigService, "Shared.Logger"],
     },
+    InMemoryEventBus,
   ],
 })
 export default class SharedDomain {}
