@@ -27,7 +27,7 @@ export default class UsersController {
       email: req.body.email,
     };
 
-    const created = await this.usersService.create(data);
+    const created: ExposedUser = await this.usersService.create(data);
 
     return new Created(created);
   }

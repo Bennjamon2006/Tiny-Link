@@ -7,7 +7,7 @@ export default abstract class MongoDataSource<T> implements DataSource<T> {
 
   private collectionName: string;
 
-  private collection: Collection<T>;
+  protected collection: Collection<T>;
 
   constructor(db: Db) {
     this.db = db;

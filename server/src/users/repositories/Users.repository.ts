@@ -1,6 +1,6 @@
 import Inject from "shared/decorators/Inject";
 import Injectable from "shared/decorators/Injectable";
-import DataSource from "shared/domain/DataSource";
+import UsersDataSource from "users/data-sources/Users.dataSource";
 import UserMapper from "users/mappers/User.mapper";
 import { PersistenceUser } from "users/models/User.dto";
 import User from "users/models/User.entity";
@@ -9,11 +9,12 @@ import User from "users/models/User.entity";
 export default class UsersRepository {
   constructor(
     @Inject("Users.DataSource")
-    private readonly usersDataSource: DataSource<PersistenceUser>,
+    private readonly usersDataSource: UsersDataSource,
   ) {}
 
   public async getById(id: string): Promise<User | null> {
-    const persistenceUser = await this.usersDataSource.getById(id);
+    const persistenceUser: PersistenceUser =
+      await this.usersDataSource.getById(id);
 
     if (persistenceUser === null) {
       return null;
@@ -25,8 +26,22 @@ export default class UsersRepository {
   public async create(user: User): Promise<User> {
     const persistenceUser: PersistenceUser = UserMapper.toPersistence(user);
 
-    const created = await this.usersDataSource.create(persistenceUser);
+    const created: PersistenceUser =
+      await this.usersDataSource.create(persistenceUser);
 
     return UserMapper.fromPersistence(created);
+  }
+
+  public async existsWithUsername(username: string): Promise<boolean> {
+    const user: PersistenceUser =
+      await this.usersDataSource.getByUsername(username);
+
+    return user !== null;
+  }
+
+  public async existsWithEmail(email: string): Promise<boolean> {
+    const user: PersistenceUser = await this.usersDataSource.getByEmail(email);
+
+    return user !== null;
   }
 }
