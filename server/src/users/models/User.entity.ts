@@ -1,6 +1,6 @@
 import { hashSync, compareSync } from "bcrypt";
 import Entity from "shared/domain/Entity";
-import InternalServerError from "shared/exceptions/InternalServerError";
+import { InternalServerError } from "shared/exceptions/CustomRequestErrors";
 
 export default class User extends Entity {
   private readonly HASH_SALTS: number = 10;

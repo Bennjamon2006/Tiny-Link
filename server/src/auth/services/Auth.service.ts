@@ -1,6 +1,6 @@
 import LoginData from "auth/models/LoginData";
 import Injectable from "shared/decorators/Injectable";
-import InternalServerError from "shared/exceptions/InternalServerError";
+import { InternalServerError } from "shared/exceptions/CustomRequestErrors";
 
 @Injectable()
 export default class AuthService {

@@ -1,6 +1,6 @@
 import Middleware from "shared/classes/Middleware";
 import Request from "shared/classes/Request";
-import BadRequestError from "shared/exceptions/BadRequestError";
+import { BadRequestError } from "shared/exceptions/CustomRequestErrors";
 import Validator from "shared/classes/Validator";
 
 export default class BodyValidator extends Middleware {

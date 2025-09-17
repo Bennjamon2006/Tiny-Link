@@ -6,7 +6,7 @@ import ControllerData from "shared/types/ControllerData";
 import Container from "./dependency-injection/Container";
 import resolveToken from "server/utils/resolveToken";
 import parseHandler from "server/utils/parseHandler";
-import NotFoundError from "shared/exceptions/NotFoundError";
+import { NotFoundError } from "shared/exceptions/CustomRequestErrors";
 import RequestError from "shared/exceptions/RequestError";
 import ServerConfigService from "./domain/ServerConfigService";
 import Injectable from "shared/decorators/Injectable";

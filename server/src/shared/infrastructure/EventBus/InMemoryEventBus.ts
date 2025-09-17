@@ -1,7 +1,7 @@
 import Injectable from "shared/decorators/Injectable";
 import Event from "shared/domain/Event";
 import EventBus from "shared/domain/EventBus";
-import InternalServerError from "shared/exceptions/InternalServerError";
+import { InternalServerError } from "shared/exceptions/CustomRequestErrors";
 import EventListener from "shared/types/EventListener";
 import EventType from "shared/types/EventType";
 

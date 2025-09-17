@@ -1,8 +1,10 @@
 import Inject from "shared/decorators/Inject";
 import Injectable from "shared/decorators/Injectable";
 import EventBus from "shared/domain/EventBus";
-import ConflictError from "shared/exceptions/ConflictError";
-import NotFoundError from "shared/exceptions/NotFoundError";
+import {
+  ConflictError,
+  NotFoundError,
+} from "shared/exceptions/CustomRequestErrors";
 import UserCreatedEvent from "users/events/UserCreatedEvent";
 import UserMapper from "users/mappers/User.mapper";
 import { ExposedUser, UserToCreate } from "users/models/User.dto";
