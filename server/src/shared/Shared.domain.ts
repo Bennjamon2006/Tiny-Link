@@ -4,6 +4,8 @@ import Domain from "./decorators/Domain";
 import WinstonLogger from "./infrastructure/Logger/WinstonLogger";
 import Logger from "./domain/Logger";
 import InMemoryEventBus from "./infrastructure/EventBus/InMemoryEventBus";
+import InMemoryQueryBus from "./infrastructure/QueryBus/InMemoryQueryBus";
+import InMemoryCommandBus from "./infrastructure/CommandBus/InMemoryCommandBus";
 
 @Domain({
   name: "Shared",
@@ -22,6 +24,8 @@ import InMemoryEventBus from "./infrastructure/EventBus/InMemoryEventBus";
       args: [MongoConfigService, "Shared.Logger"],
     },
     InMemoryEventBus,
+    InMemoryQueryBus,
+    InMemoryCommandBus,
   ],
 })
 export default class SharedDomain {}

@@ -4,11 +4,15 @@ import Request from "shared/classes/Request";
 import Response from "shared/classes/Response";
 import { Ok } from "shared/classes/CustomResponses";
 import LoginData from "auth/models/LoginData";
-import AuthService from "auth/services/Auth.service";
+import Inject from "shared/decorators/Inject";
+import CommandBus from "shared/domain/CommandBus";
+import LoginCommand from "auth/commands/Login.command";
 
 @Controller("/auth")
 export default class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject("Shared.CommandBus") private readonly commandBus: CommandBus,
+  ) {}
 
   @Post("/login")
   public async login(req: Request): Promise<Response> {
@@ -17,8 +21,10 @@ export default class AuthController {
       password: req.body.password,
     };
 
-    const result = await this.authService.login(loginData);
+    const command = new LoginCommand(loginData);
 
-    return new Ok(result);
+    await this.commandBus.execute(command);
+
+    return new Ok();
   }
 }

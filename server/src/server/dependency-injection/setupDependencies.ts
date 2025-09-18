@@ -28,5 +28,13 @@ export default async function setupDependencies() {
     for (const eventWatcher of domainData.eventWatchers || []) {
       await Container.instance.register(eventWatcher);
     }
+
+    for (const queryHandler of domainData.queryHandlers || []) {
+      await Container.instance.register(queryHandler);
+    }
+
+    for (const commandHandler of domainData.commandHandlers || []) {
+      await Container.instance.register(commandHandler);
+    }
   }
 }

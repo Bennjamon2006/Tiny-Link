@@ -6,6 +6,8 @@ type DomainData = {
   dependencies?: Dependency<any>[];
   controllers?: Dependency<any>[];
   eventWatchers?: Constructor<any>[];
+  queryHandlers?: Constructor<any>[];
+  commandHandlers?: Constructor<any>[];
 };
 
 export default DomainData;

@@ -1,7 +1,7 @@
 import Response from "./Response";
 
 export class Ok extends Response {
-  constructor(data: any, headers?: Record<string, string>) {
+  constructor(data?: any, headers?: Record<string, string>) {
     super(200, data, headers);
   }
 }
