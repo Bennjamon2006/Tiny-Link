@@ -24,8 +24,14 @@ export class NotFoundError extends RequestError {
   }
 }
 
-export default class UnauthorizedError extends RequestError {
+export class UnauthorizedError extends RequestError {
   constructor(message: string) {
     super(message, 401);
+  }
+}
+
+export class ForbiddenError extends RequestError {
+  constructor(message: string) {
+    super(message, 403);
   }
 }

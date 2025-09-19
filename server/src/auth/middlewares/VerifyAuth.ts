@@ -2,7 +2,10 @@ import GetSessionByIdQuery from "auth/queries/GetSessionById.query";
 import Middleware from "shared/classes/Middleware";
 import Request from "shared/classes/Request";
 import QueryBus from "shared/domain/QueryBus";
-import UnauthorizedError from "shared/exceptions/CustomRequestErrors";
+import {
+  ForbiddenError,
+  UnauthorizedError,
+} from "shared/exceptions/CustomRequestErrors";
 
 export default class VerifyAuth extends Middleware {
   public async use(req: Request): Promise<void> {
@@ -15,6 +18,13 @@ export default class VerifyAuth extends Middleware {
     const queryBus: QueryBus = this.get("Shared.QueryBus");
 
     const session = await queryBus.ask(new GetSessionByIdQuery(sessionId));
+
+    if (
+      session.ip !== req.ip ||
+      session.userAgent !== req.headers["user-agent"]
+    ) {
+      throw new ForbiddenError("Session does not match request context");
+    }
 
     req.session = session;
   }

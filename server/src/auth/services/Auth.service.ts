@@ -6,7 +6,7 @@ import SessionsRepository from "auth/repositories/Sessions.repository";
 import Inject from "shared/decorators/Inject";
 import Injectable from "shared/decorators/Injectable";
 import QueryBus from "shared/domain/QueryBus";
-import UnauthorizedError from "shared/exceptions/CustomRequestErrors";
+import { UnauthorizedError } from "shared/exceptions/CustomRequestErrors";
 import User from "users/models/User.entity";
 import GetUserByCredentialsQuery from "users/queries/GetUserByCredentials.query";
 

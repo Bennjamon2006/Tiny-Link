@@ -1,7 +1,8 @@
 import Inject from "shared/decorators/Inject";
 import Injectable from "shared/decorators/Injectable";
 import EventBus from "shared/domain/EventBus";
-import UnauthorizedError, {
+import {
+  UnauthorizedError,
   ConflictError,
   NotFoundError,
 } from "shared/exceptions/CustomRequestErrors";
