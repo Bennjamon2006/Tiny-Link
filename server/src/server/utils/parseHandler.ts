@@ -19,6 +19,7 @@ export default function parseHandler(
         req.headers,
         req.method,
         req.url,
+        req.ip,
       );
 
       for (const middleware of middlewares) {

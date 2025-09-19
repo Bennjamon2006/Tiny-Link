@@ -19,12 +19,14 @@ export default class AuthController {
     const loginData: LoginData = {
       username: req.body.username,
       password: req.body.password,
+      ip: req.ip,
+      userAgent: req.headers["user-agent"],
     };
 
     const command = new LoginCommand(loginData);
 
-    await this.commandBus.execute(command);
+    const sessionId = await this.commandBus.execute(command);
 
-    return new Ok();
+    return new Ok(undefined, { session: sessionId });
   }
 }

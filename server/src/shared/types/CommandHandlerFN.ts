@@ -1,5 +1,5 @@
 import Command from "shared/domain/Command";
 
-type CommandHandlerFN = (command: Command<any>) => void | Promise<void>;
+type CommandHandlerFN = (command: Command<any>) => any;
 
 export default CommandHandlerFN;

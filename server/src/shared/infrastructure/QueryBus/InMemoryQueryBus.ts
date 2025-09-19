@@ -6,6 +6,7 @@ import SetupError from "shared/exceptions/SetupError";
 import QueryHandler from "shared/types/QueryHandlerFN";
 import QueryResult from "shared/types/QueryResult";
 import Injectable from "shared/decorators/Injectable";
+import RequestError from "shared/exceptions/RequestError";
 
 @Injectable("QueryBus")
 export default class InMemoryQueryBus implements QueryBus {
@@ -41,8 +42,12 @@ export default class InMemoryQueryBus implements QueryBus {
 
       return result;
     } catch (err) {
+      if (RequestError.isRequestError(err)) {
+        throw err;
+      }
+
       throw new InternalServerError(
-        `Error handling query ${queryType.name}: ${err.message}`,
+        `Error handling query ${queryType.name} at: ${err.stack.split("\n")[1]}:\n ${err.message}`,
       );
     }
   }

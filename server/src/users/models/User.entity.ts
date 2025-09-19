@@ -18,6 +18,8 @@ export default class User extends Entity {
     updatedAt?: Date,
   ) {
     super(id, createdAt, updatedAt);
+
+    this.hashPassword();
   }
 
   private hashPassword(): void {

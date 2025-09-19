@@ -3,10 +3,11 @@ import AuthController from "./controllers/Auth.controller";
 import AuthService from "./services/Auth.service";
 import MongoSessionsDataSource from "./infrastructure/MongoSessionsDataSource";
 import AuthCommandHandler from "./command-handlers/Auth.commandHandler";
+import SessionsRepository from "./repositories/Sessions.repository";
 
 @Domain({
   name: "Auth",
-  dependencies: [MongoSessionsDataSource, AuthService],
+  dependencies: [MongoSessionsDataSource, SessionsRepository, AuthService],
   controllers: [AuthController],
   commandHandlers: [AuthCommandHandler],
 })

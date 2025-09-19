@@ -132,13 +132,13 @@ export default class UsersEventWatcher {
 
 ---
 
-## Resumen de Endpoints (Users)
+## Resumen de Endpoints
 
-| Método | Ruta           | Middlewares                                | Response          |
-| ------ | -------------- | ------------------------------------------ | ----------------- |
-| GET    | `/users/`      | Custom middlewares si aplica               | `Ok`              |
-| POST   | `/users/`      | `BodyValidator.use(UserToCreateValidator)` | `Created`         |
-| POST   | `/auth/login/` | Custom middlewares si aplica               | **En desarrollo** |
+| Método | Ruta           | Middlewares                                | Response  |
+| ------ | -------------- | ------------------------------------------ | --------- |
+| GET    | `/users/`      | Custom middlewares si aplica               | `Ok`      |
+| POST   | `/users/`      | `BodyValidator.use(UserToCreateValidator)` | `Created` |
+| POST   | `/auth/login/` | Custom middlewares si aplica               | `Ok`      |
 
 ---
 

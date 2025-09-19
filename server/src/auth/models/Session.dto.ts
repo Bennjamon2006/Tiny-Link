@@ -6,7 +6,4 @@ export type PersistenceSession = Omit<Required<Session>, "presave" | "id"> & {
 
 export type ExposedSession = Omit<Required<Session>, "presave">;
 
-export type SessionToCreate = Pick<
-  Required<Session>,
-  "ip" | "userAgent" | "userId"
->;
+export type SessionToCreate = Pick<Session, "ip" | "userAgent" | "userId">;

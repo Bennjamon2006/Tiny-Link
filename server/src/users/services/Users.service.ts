@@ -1,7 +1,7 @@
 import Inject from "shared/decorators/Inject";
 import Injectable from "shared/decorators/Injectable";
 import EventBus from "shared/domain/EventBus";
-import {
+import UnauthorizedError, {
   ConflictError,
   NotFoundError,
 } from "shared/exceptions/CustomRequestErrors";
@@ -57,5 +57,15 @@ export default class UsersService {
     if (isRepeatedEmail) {
       throw new ConflictError(`User with email "${data.email}" already exists`);
     }
+  }
+
+  public async getUserByCredentails(username: string, password: string) {
+    let user = await this.usersRepository.getByUsernameOrEmail(username);
+
+    if (!user || !user.comparePassword(password)) {
+      throw new UnauthorizedError("Invalid credentials");
+    }
+
+    return user;
   }
 }

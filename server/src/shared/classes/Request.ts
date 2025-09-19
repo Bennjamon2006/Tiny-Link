@@ -6,5 +6,6 @@ export default class Request {
     public headers: any,
     public method: string,
     public url: string,
+    public ip: string,
   ) {}
 }

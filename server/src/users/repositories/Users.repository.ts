@@ -44,4 +44,18 @@ export default class UsersRepository {
 
     return user !== null;
   }
+
+  public async getByUsernameOrEmail(
+    usernameOrEmail: string,
+  ): Promise<User | null> {
+    let user = await this.usersDataSource.getByUsername(usernameOrEmail);
+
+    user ??= await this.usersDataSource.getByEmail(usernameOrEmail);
+
+    if (!user) {
+      return null;
+    }
+
+    return UserMapper.fromPersistence(user);
+  }
 }
