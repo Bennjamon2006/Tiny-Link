@@ -7,12 +7,15 @@ import Inject from "shared/decorators/Inject";
 import CommandBus from "shared/domain/CommandBus";
 import { SessionToCreate } from "auth/models/Session.dto";
 import Session from "auth/models/Session.entity";
+import QueryBus from "shared/domain/QueryBus";
+import GetExistingSessionQuery from "auth/queries/GetExistingSession.query";
 
 @CommandHandler()
 export default class AuthCommandHandler {
   constructor(
     private readonly authService: AuthService,
     @Inject("Shared.CommandBus") private readonly commandBus: CommandBus,
+    @Inject("Shared.QueryBus") private readonly queryBus: QueryBus,
   ) {}
 
   @OnCommand()
@@ -24,6 +27,14 @@ export default class AuthCommandHandler {
       ip: command.params.ip,
       userAgent: command.params.userAgent,
     };
+
+    const existingSession = await this.queryBus.ask(
+      new GetExistingSessionQuery(sessionToCreate),
+    );
+
+    if (existingSession) {
+      return existingSession.id;
+    }
 
     const session = await this.commandBus.execute(
       new CreateSessionCommand(sessionToCreate),

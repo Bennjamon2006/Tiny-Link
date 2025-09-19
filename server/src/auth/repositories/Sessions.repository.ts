@@ -19,4 +19,18 @@ export default class SessionsRepository {
 
     return SessionMapper.fromPersistence(created);
   }
+
+  public async getExistingSession(session: Session): Promise<Session | null> {
+    const existing: PersistenceSession = await this.sessionDataSource.getOne({
+      userId: session.userId,
+      ip: session.ip,
+      userAgent: session.userAgent,
+    });
+
+    if (!existing) {
+      return null;
+    }
+
+    return SessionMapper.fromPersistence(existing);
+  }
 }

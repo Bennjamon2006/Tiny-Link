@@ -32,4 +32,12 @@ export default class AuthService {
 
     return this.sessionsRepository.create(session);
   }
+
+  public async getExistingSession(
+    sessionToCreate: SessionToCreate,
+  ): Promise<Session | null> {
+    const session = SessionMapper.fromCreate(sessionToCreate);
+
+    return this.sessionsRepository.getExistingSession(session);
+  }
 }
