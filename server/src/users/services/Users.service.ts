@@ -27,7 +27,7 @@ export default class UsersService {
     return UserMapper.toExposed(user);
   }
 
-  public async create(data: UserToCreate) {
+  public async create(data: UserToCreate): Promise<ExposedUser> {
     await this.verifyNoRepeated(data);
 
     const user = UserMapper.fromCreate(data);

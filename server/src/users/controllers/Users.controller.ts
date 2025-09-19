@@ -4,17 +4,27 @@ import Request from "shared/classes/Request";
 import Response from "shared/classes/Response";
 import { Created, Ok } from "shared/classes/CustomResponses";
 import BodyValidator from "shared/middlewares/BodyValidator";
-import UsersService from "users/services/Users.service";
 import { ExposedUser, UserToCreate } from "users/models/User.dto";
 import UserToCreateValidator from "users/validators/UserToCreate.validator";
+import Inject from "shared/decorators/Inject";
+import CommandBus from "shared/domain/CommandBus";
+import QueryBus from "shared/domain/QueryBus";
+import CreateUserCommand from "users/commands/CreateUser.command";
+import CreateSessionCommand from "auth/commands/CreateSession.command";
+import GetUserByIdQuery from "users/queries/GetUserById.query";
 
 @Controller("/users")
 export default class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    @Inject("Shared.CommandBus") private readonly commandBus: CommandBus,
+    @Inject("Shared.QueryBus") private readonly queryBus: QueryBus,
+  ) {}
 
   @Get("/:id")
   public async getUserById(req: Request): Promise<Response> {
-    const user: ExposedUser = await this.usersService.getById(req.params.id);
+    const user: ExposedUser = await this.queryBus.ask(
+      new GetUserByIdQuery(req.params.id),
+    );
 
     return new Ok(user);
   }
@@ -27,8 +37,22 @@ export default class UsersController {
       email: req.body.email,
     };
 
-    const created: ExposedUser = await this.usersService.create(data);
+    const autoLogin: boolean = req.body.autoLogin ?? true;
 
-    return new Created(created);
+    const userId = await this.commandBus.execute(new CreateUserCommand(data));
+
+    if (autoLogin) {
+      const sessionId = await this.commandBus.execute(
+        new CreateSessionCommand({
+          userId,
+          ip: req.ip,
+          userAgent: req.headers["user-agent"],
+        }),
+      );
+
+      return new Created({ userId }, { session: sessionId });
+    }
+
+    return new Created({ userId });
   }
 }

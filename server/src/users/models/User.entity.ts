@@ -19,7 +19,9 @@ export default class User extends Entity {
   ) {
     super(id, createdAt, updatedAt);
 
-    this.hashPassword();
+    if (passwordHashed) {
+      this.passwordHash = password;
+    }
   }
 
   private hashPassword(): void {

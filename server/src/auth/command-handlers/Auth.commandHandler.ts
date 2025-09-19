@@ -36,17 +36,19 @@ export default class AuthCommandHandler {
       return existingSession.id;
     }
 
-    const session = await this.commandBus.execute(
+    const sessionId = await this.commandBus.execute(
       new CreateSessionCommand(sessionToCreate),
     );
 
-    return session.id;
+    return sessionId;
   }
 
   @OnCommand()
   public async createSessionHandler(
     command: CreateSessionCommand,
-  ): Promise<Session> {
-    return this.authService.createSession(command.params);
+  ): Promise<string> {
+    const session = await this.authService.createSession(command.params);
+
+    return session.id;
   }
 }
