@@ -1,6 +1,8 @@
+import ChangeSessionLastVisitCommand from "auth/commands/ChangeSessionLastVisit.command";
 import GetSessionByIdQuery from "auth/queries/GetSessionById.query";
 import Middleware from "shared/classes/Middleware";
 import Request from "shared/classes/Request";
+import CommandBus from "shared/domain/CommandBus";
 import QueryBus from "shared/domain/QueryBus";
 import {
   ForbiddenError,
@@ -16,6 +18,7 @@ export default class VerifyAuth extends Middleware {
     }
 
     const queryBus: QueryBus = this.get("Shared.QueryBus");
+    const commandBus: CommandBus = this.get("Shared.CommandBus");
 
     const session = await queryBus.ask(new GetSessionByIdQuery(sessionId));
 
@@ -25,6 +28,8 @@ export default class VerifyAuth extends Middleware {
     ) {
       throw new ForbiddenError("Session does not match request context");
     }
+
+    await commandBus.execute(new ChangeSessionLastVisitCommand(session.id));
 
     req.session = session;
   }

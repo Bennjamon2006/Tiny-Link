@@ -50,4 +50,8 @@ export default class SessionsRepository {
 
     return sessions.map(SessionMapper.fromPersistence);
   }
+
+  public async changeSessionLastVisit(sessionId: string): Promise<void> {
+    await this.sessionDataSource.update(sessionId, { lastVisit: new Date() });
+  }
 }

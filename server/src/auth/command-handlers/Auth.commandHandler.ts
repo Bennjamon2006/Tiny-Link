@@ -6,9 +6,9 @@ import CreateSessionCommand from "auth/commands/CreateSession.command";
 import Inject from "shared/decorators/Inject";
 import CommandBus from "shared/domain/CommandBus";
 import { SessionToCreate } from "auth/models/Session.dto";
-import Session from "auth/models/Session.entity";
 import QueryBus from "shared/domain/QueryBus";
 import GetExistingSessionQuery from "auth/queries/GetExistingSession.query";
+import ChangeSessionLastVisitCommand from "auth/commands/ChangeSessionLastVisit.command";
 
 @CommandHandler()
 export default class AuthCommandHandler {
@@ -44,11 +44,18 @@ export default class AuthCommandHandler {
   }
 
   @OnCommand()
-  public async createSessionHandler(
+  public async handleCreateSession(
     command: CreateSessionCommand,
   ): Promise<string> {
     const session = await this.authService.createSession(command.params);
 
     return session.id;
+  }
+
+  @OnCommand()
+  public async handleChangeSessionLastVisit(
+    command: ChangeSessionLastVisitCommand,
+  ): Promise<void> {
+    await this.authService.changeSessionLastVisit(command.params);
   }
 }

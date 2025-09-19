@@ -49,6 +49,10 @@ export default class AuthService {
       throw new UnauthorizedError("Invalid session");
     }
 
+    if (session.isExpired()) {
+      throw new UnauthorizedError("Session expired");
+    }
+
     return SessionMapper.toExposed(session);
   }
 
@@ -56,5 +60,9 @@ export default class AuthService {
     const sessions = await this.sessionsRepository.getUserSessions(userId);
 
     return sessions.map(SessionMapper.toExposed);
+  }
+
+  public async changeSessionLastVisit(sessionId: string): Promise<void> {
+    await this.sessionsRepository.changeSessionLastVisit(sessionId);
   }
 }
