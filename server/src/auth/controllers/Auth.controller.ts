@@ -1,5 +1,5 @@
 import Controller from "shared/decorators/Controller";
-import { Post } from "shared/decorators/RouteControllers";
+import { Get, Post } from "shared/decorators/RouteControllers";
 import Request from "shared/classes/Request";
 import Response from "shared/classes/Response";
 import { Ok } from "shared/classes/CustomResponses";
@@ -7,11 +7,15 @@ import LoginData from "auth/models/LoginData";
 import Inject from "shared/decorators/Inject";
 import CommandBus from "shared/domain/CommandBus";
 import LoginCommand from "auth/commands/Login.command";
+import VerifyAuth from "auth/middlewares/VerifyAuth";
+import QueryBus from "shared/domain/QueryBus";
+import GetUserSessionsQuery from "auth/queries/GetUserSessions.query";
 
 @Controller("/auth")
 export default class AuthController {
   constructor(
     @Inject("Shared.CommandBus") private readonly commandBus: CommandBus,
+    @Inject("Shared.QueryBus") private readonly queryBus: QueryBus,
   ) {}
 
   @Post("/login")
@@ -28,5 +32,14 @@ export default class AuthController {
     const sessionId = await this.commandBus.execute(command);
 
     return new Ok(undefined, { session: sessionId });
+  }
+
+  @Get("/sessions", VerifyAuth.use())
+  public async getUserSessions(req: Request): Promise<Response> {
+    const userSessions = await this.queryBus.ask(
+      new GetUserSessionsQuery(req.session.userId),
+    );
+
+    return new Ok(userSessions);
   }
 }

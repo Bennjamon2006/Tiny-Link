@@ -51,4 +51,10 @@ export default class AuthService {
 
     return SessionMapper.toExposed(session);
   }
+
+  public async getUserSessions(userId: string): Promise<ExposedSession[]> {
+    const sessions = await this.sessionsRepository.getUserSessions(userId);
+
+    return sessions.map(SessionMapper.toExposed);
+  }
 }

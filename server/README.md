@@ -134,11 +134,14 @@ export default class UsersEventWatcher {
 
 ## Resumen de Endpoints
 
-| Método | Ruta           | Middlewares                                | Response  |
-| ------ | -------------- | ------------------------------------------ | --------- |
-| GET    | `/users/`      | Custom middlewares si aplica               | `Ok`      |
-| POST   | `/users/`      | `BodyValidator.use(UserToCreateValidator)` | `Created` |
-| POST   | `/auth/login/` | Custom middlewares si aplica               | `Ok`      |
+| Método | Ruta              | Requiere autenticaion | Función                                                    |
+| ------ | ----------------- | --------------------- | ---------------------------------------------------------- |
+| GET    | `/users/`         | Sí                    | Obtener información del usuario autenticado                |
+| POST   | `/users/`         | No                    | Crear un nuevo usuario                                     |
+| POST   | `/auth/login/`    | No                    | Iniciar sesión con credenciales de usuario                 |
+| GET    | `/auth/sessions/` | No                    | Obtener todas las sesiones activas del usuario autenticado |
+
+Todos los Endpoints que requieran autenticación reciben un header `session` con la id de la sesaión.
 
 ---
 

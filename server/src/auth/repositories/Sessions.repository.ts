@@ -44,4 +44,10 @@ export default class SessionsRepository {
 
     return SessionMapper.fromPersistence(session);
   }
+
+  public async getUserSessions(userId: string): Promise<Session[]> {
+    const sessions = await this.sessionDataSource.getAll({ userId });
+
+    return sessions.map(SessionMapper.fromPersistence);
+  }
 }
