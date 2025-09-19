@@ -23,7 +23,7 @@ export default function parseHandler(
       );
 
       for (const middleware of middlewares) {
-        const response = middleware.use(req);
+        const response = await middleware.use(request);
 
         if (response instanceof Response) {
           sendResponse(res, response);

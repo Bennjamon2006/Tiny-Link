@@ -12,6 +12,7 @@ import QueryBus from "shared/domain/QueryBus";
 import CreateUserCommand from "users/commands/CreateUser.command";
 import CreateSessionCommand from "auth/commands/CreateSession.command";
 import GetUserByIdQuery from "users/queries/GetUserById.query";
+import VerifyAuth from "auth/middlewares/VerifyAuth";
 
 @Controller("/users")
 export default class UsersController {
@@ -20,10 +21,10 @@ export default class UsersController {
     @Inject("Shared.QueryBus") private readonly queryBus: QueryBus,
   ) {}
 
-  @Get("/:id")
+  @Get("/", VerifyAuth.use())
   public async getUserById(req: Request): Promise<Response> {
     const user: ExposedUser = await this.queryBus.ask(
-      new GetUserByIdQuery(req.params.id),
+      new GetUserByIdQuery(req.session.userId),
     );
 
     return new Ok(user);

@@ -1,4 +1,8 @@
+import { ExposedSession } from "auth/models/Session.dto";
+
 export default class Request {
+  public session?: ExposedSession;
+
   constructor(
     public body: any,
     public query: any,

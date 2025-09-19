@@ -33,4 +33,15 @@ export default class SessionsRepository {
 
     return SessionMapper.fromPersistence(existing);
   }
+
+  public async getSessionById(id: string): Promise<Session | null> {
+    const session: PersistenceSession =
+      await this.sessionDataSource.getById(id);
+
+    if (!session) {
+      return null;
+    }
+
+    return SessionMapper.fromPersistence(session);
+  }
 }
