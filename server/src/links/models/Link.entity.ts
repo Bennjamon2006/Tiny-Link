@@ -18,4 +18,8 @@ export default class Link extends Entity {
       this.id = nanoid(6);
     }
   }
+
+  public get hasOwner(): boolean {
+    return this.userId !== undefined;
+  }
 }
