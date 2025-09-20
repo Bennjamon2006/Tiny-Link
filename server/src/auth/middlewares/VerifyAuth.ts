@@ -10,10 +10,18 @@ import {
 } from "shared/exceptions/CustomRequestErrors";
 
 export default class VerifyAuth extends Middleware {
+  constructor(private readonly strict: boolean = true) {
+    super();
+  }
+
   public async use(req: Request): Promise<void> {
     const sessionId: string = req.headers.session;
 
     if (sessionId === undefined || sessionId === null) {
+      if (!this.strict) {
+        return;
+      }
+
       throw new UnauthorizedError("No session provided");
     }
 

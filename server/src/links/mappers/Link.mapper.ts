@@ -7,7 +7,7 @@ import {
 
 export default class LinkMapper {
   public static fromCreate(data: LinkToCreate): Link {
-    return new Link(data.originalUrl, data.userId);
+    return new Link(data.originalUrl, data.userId, new Date(), data.id);
   }
 
   public static fromPersistence(data: PersistenceLink): Link {

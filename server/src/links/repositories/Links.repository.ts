@@ -19,4 +19,18 @@ export default class LinksRepository {
 
     return links.map(LinkMapper.fromPersistence);
   }
+
+  public async createLink(link: Link): Promise<Link> {
+    const persistenceLink = LinkMapper.toPersistence(link);
+
+    await this.linksDataSource.create(persistenceLink);
+
+    return link;
+  }
+
+  public async getLinkById(id: string): Promise<Link | null> {
+    const persistenceLink = await this.linksDataSource.getById(id);
+
+    return LinkMapper.fromPersistence(persistenceLink);
+  }
 }
