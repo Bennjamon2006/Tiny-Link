@@ -10,6 +10,7 @@ import LoginCommand from "auth/commands/Login.command";
 import VerifyAuth from "auth/middlewares/VerifyAuth";
 import QueryBus from "shared/domain/QueryBus";
 import GetUserSessionsQuery from "auth/queries/GetUserSessions.query";
+import LogoutCommand from "auth/commands/Logout.command";
 
 @Controller("/auth")
 export default class AuthController {
@@ -41,5 +42,19 @@ export default class AuthController {
     );
 
     return new Ok(userSessions);
+  }
+
+  @Post("/logout", VerifyAuth.use())
+  public async logout(req: Request): Promise<Response> {
+    const { sessionId = req.session.id } = req.body;
+
+    await this.commandBus.execute(
+      new LogoutCommand({
+        authenticatedSession: req.session,
+        sessionId,
+      }),
+    );
+
+    return new Ok();
   }
 }

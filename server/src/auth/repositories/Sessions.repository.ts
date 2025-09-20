@@ -54,4 +54,8 @@ export default class SessionsRepository {
   public async changeSessionLastVisit(sessionId: string): Promise<void> {
     await this.sessionDataSource.update(sessionId, { lastVisit: new Date() });
   }
+
+  public async deleteSession(sessionId: string): Promise<void> {
+    await this.sessionDataSource.delete(sessionId);
+  }
 }

@@ -1,3 +1,4 @@
+import DeleteSessionCommand from "auth/commands/DeleteSession.command";
 import SessionMapper from "auth/mappers/Session.mapper";
 import LoginData from "auth/models/LoginData";
 import { ExposedSession, SessionToCreate } from "auth/models/Session.dto";
@@ -5,6 +6,7 @@ import Session from "auth/models/Session.entity";
 import SessionsRepository from "auth/repositories/Sessions.repository";
 import Inject from "shared/decorators/Inject";
 import Injectable from "shared/decorators/Injectable";
+import CommandBus from "shared/domain/CommandBus";
 import QueryBus from "shared/domain/QueryBus";
 import { UnauthorizedError } from "shared/exceptions/CustomRequestErrors";
 import User from "users/models/User.entity";
@@ -14,6 +16,7 @@ import GetUserByCredentialsQuery from "users/queries/GetUserByCredentials.query"
 export default class AuthService {
   constructor(
     @Inject("Shared.QueryBus") private readonly queryBus: QueryBus,
+    @Inject("Shared.CommandBus") private readonly commandBus: CommandBus,
     private readonly sessionsRepository: SessionsRepository,
   ) {}
 
@@ -50,6 +53,8 @@ export default class AuthService {
     }
 
     if (session.isExpired()) {
+      await this.commandBus.execute(new DeleteSessionCommand(session.id));
+
       throw new UnauthorizedError("Session expired");
     }
 
@@ -64,5 +69,9 @@ export default class AuthService {
 
   public async changeSessionLastVisit(sessionId: string): Promise<void> {
     await this.sessionsRepository.changeSessionLastVisit(sessionId);
+  }
+
+  public async deleteSession(sessionId: string): Promise<void> {
+    await this.sessionsRepository.deleteSession(sessionId);
   }
 }

@@ -9,6 +9,10 @@ import { SessionToCreate } from "auth/models/Session.dto";
 import QueryBus from "shared/domain/QueryBus";
 import GetExistingSessionQuery from "auth/queries/GetExistingSession.query";
 import ChangeSessionLastVisitCommand from "auth/commands/ChangeSessionLastVisit.command";
+import DeleteSessionCommand from "auth/commands/DeleteSession.command";
+import LogoutCommand from "auth/commands/Logout.command";
+import GetSessionByIdQuery from "auth/queries/GetSessionById.query";
+import { ForbiddenError } from "shared/exceptions/CustomRequestErrors";
 
 @CommandHandler()
 export default class AuthCommandHandler {
@@ -57,5 +61,37 @@ export default class AuthCommandHandler {
     command: ChangeSessionLastVisitCommand,
   ): Promise<void> {
     await this.authService.changeSessionLastVisit(command.params);
+  }
+
+  @OnCommand()
+  public async handleDeleteSession(
+    command: DeleteSessionCommand,
+  ): Promise<void> {
+    await this.authService.deleteSession(command.params);
+  }
+
+  @OnCommand()
+  public async handleLogout(command: LogoutCommand): Promise<void> {
+    if (command.params.sessionId === command.params.authenticatedSession.id) {
+      await this.commandBus.execute(
+        new DeleteSessionCommand(command.params.sessionId),
+      );
+
+      return;
+    }
+
+    const session = await this.queryBus.ask(
+      new GetSessionByIdQuery(command.params.sessionId),
+    );
+
+    if (session.userId !== command.params.authenticatedSession.userId) {
+      throw new ForbiddenError(
+        "Cannot delete a session that does not belong to the authenticated user",
+      );
+    }
+
+    await this.commandBus.execute(
+      new DeleteSessionCommand(command.params.sessionId),
+    );
   }
 }
