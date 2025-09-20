@@ -1,5 +1,5 @@
 import Domain from "shared/decorators/Domain";
-import LinksController from "./controller/Links.controller";
+import LinksController from "./controllers/Links.controller";
 
 @Domain({
   name: "Links",
