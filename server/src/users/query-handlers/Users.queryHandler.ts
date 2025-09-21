@@ -1,3 +1,4 @@
+import Cache from "shared/decorators/Cache";
 import OnQuery from "shared/decorators/OnQuery";
 import QueryHandler from "shared/decorators/QueryHandler";
 import { ExposedUser } from "users/models/User.dto";
@@ -20,6 +21,7 @@ export default class UsersQueryHandler {
     );
   }
 
+  @Cache(1000 * 60 * 10)
   @OnQuery()
   public async getUserById(query: GetUserByIdQuery): Promise<ExposedUser> {
     return this.usersService.getById(query.params);

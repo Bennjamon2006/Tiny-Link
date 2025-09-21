@@ -4,6 +4,7 @@ import GetExistingSessionQuery from "auth/queries/GetExistingSession.query";
 import GetSessionByIdQuery from "auth/queries/GetSessionById.query";
 import GetUserSessionsQuery from "auth/queries/GetUserSessions.query";
 import AuthService from "auth/services/Auth.service";
+import Cache from "shared/decorators/Cache";
 import OnQuery from "shared/decorators/OnQuery";
 import QueryHandler from "shared/decorators/QueryHandler";
 
@@ -18,6 +19,7 @@ export default class AuthQueryHandler {
     return this.authService.getExistingSession(query.params);
   }
 
+  @Cache(1000 * 60 * 60 * 12)
   @OnQuery()
   public async handleGetSessionById(
     query: GetSessionByIdQuery,
