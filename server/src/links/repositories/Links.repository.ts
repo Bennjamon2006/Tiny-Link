@@ -31,6 +31,10 @@ export default class LinksRepository {
   public async getLinkById(id: string): Promise<Link | null> {
     const persistenceLink = await this.linksDataSource.getById(id);
 
+    if (!persistenceLink) {
+      return null;
+    }
+
     return LinkMapper.fromPersistence(persistenceLink);
   }
 }

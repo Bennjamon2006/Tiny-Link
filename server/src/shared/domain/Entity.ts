@@ -23,10 +23,10 @@ export default abstract class Entity {
 
   public presave(): void {
     this.updatedAt = new Date();
+    this.createdAt ||= this.updatedAt;
 
     if (!this.id) {
       this.id = uuid();
-      this.createdAt = this.updatedAt;
     }
   }
 }

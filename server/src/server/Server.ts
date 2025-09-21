@@ -143,7 +143,6 @@ export default class Server {
         this.logger.error(`Error starting server: ${err.message}`);
         throw err;
       }
-
       this.logger.info(`Server is running at http://${host}:${port}`);
     });
   }

@@ -134,12 +134,14 @@ export default class UsersEventWatcher {
 
 ## Resumen de Endpoints
 
-| Método | Ruta              | Requiere autenticaion | Función                                                    |
-| ------ | ----------------- | --------------------- | ---------------------------------------------------------- |
-| GET    | `/users/`         | Sí                    | Obtener información del usuario autenticado                |
-| POST   | `/users/`         | No                    | Crear un nuevo usuario                                     |
-| POST   | `/auth/login/`    | No                    | Iniciar sesión con credenciales de usuario                 |
-| GET    | `/auth/sessions/` | No                    | Obtener todas las sesiones activas del usuario autenticado |
+| Método | Ruta              | Requiere autenticaion       | Función                                                    |
+| ------ | ----------------- | --------------------------- | ---------------------------------------------------------- |
+| GET    | `/users/`         | Sí                          | Obtener información del usuario autenticado                |
+| POST   | `/users/`         | No                          | Crear un nuevo usuario                                     |
+| POST   | `/auth/login/`    | No                          | Iniciar sesión con credenciales de usuario                 |
+| GET    | `/auth/sessions/` | Sí                          | Obtener todas las sesiones activas del usuario autenticado |
+| GET    | `/auth/linkas/`   | Sí                          | Obtener todos los links creados por usuario autenticado    |
+| POST   | `/auth/linkas/`   | Se usa, pero no obligatoria | Crear un nuevo link                                        |
 
 Todos los Endpoints que requieran autenticación reciben un header `session` con la id de la sesaión.
 
