@@ -1,7 +1,3 @@
-Perfecto, aquí tienes tu documentación actualizada para incluir el **uso de CQRS** junto con los otros componentes y sistemas que ya tenías:
-
----
-
 ## Arquitectura
 
 Este proyecto implementa una arquitectura limpia basada en **Domain-Driven Design**, adaptada para ser ligera, modular y flexible.
@@ -140,8 +136,8 @@ export default class UsersEventWatcher {
 | POST   | `/users/`         | No                          | Crear un nuevo usuario                                     |
 | POST   | `/auth/login/`    | No                          | Iniciar sesión con credenciales de usuario                 |
 | GET    | `/auth/sessions/` | Sí                          | Obtener todas las sesiones activas del usuario autenticado |
-| GET    | `/auth/linkas/`   | Sí                          | Obtener todos los links creados por usuario autenticado    |
-| POST   | `/auth/linkas/`   | Se usa, pero no obligatoria | Crear un nuevo link                                        |
+| GET    | `/auth/links/`    | Sí                          | Obtener todos los links creados por usuario autenticado    |
+| POST   | `/auth/links/`    | Se usa, pero no obligatoria | Crear un nuevo link                                        |
 
 Todos los Endpoints que requieran autenticación reciben un header `session` con la id de la sesaión.
 
@@ -188,9 +184,3 @@ Logs al iniciar:
 2025-09-18T00:49:28.373Z (Shared) [info]: Query handlers loaded
 2025-09-18T00:49:28.381Z (Server) [info]: Server is running at http://localhost:3000
 ```
-
----
-
-Si quieres, puedo hacer otra versión **con diagramas de flujo** mostrando cómo se mueve la información desde el HTTP request hasta la base de datos usando **CQRS y eventos**; eso suele hacer que el README quede mucho más visual.
-
-¿Quieres que haga esa versión?
