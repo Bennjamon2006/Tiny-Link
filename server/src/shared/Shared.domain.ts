@@ -15,7 +15,12 @@ import InMemoryCommandBus from "./infrastructure/CommandBus/InMemoryCommandBus";
       class: WinstonLogger,
       args: ["Shared"],
     },
-    MongoConfigService,
+    {
+      token: MongoConfigService,
+      factory() {
+        return MongoConfigService.initialize();
+      },
+    },
     {
       token: "MongoDB.Connection",
       factory: (mongoConfigService: MongoConfigService, logger: Logger) => {

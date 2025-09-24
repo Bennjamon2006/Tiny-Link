@@ -1,5 +1,5 @@
 import { Db, MongoClient } from "mongodb";
-import MongoConfigService, { MongoConfig } from "./MongoConfigService";
+import MongoConfigService from "./MongoConfigService";
 import Logger from "shared/domain/Logger";
 
 export class MongoConnectionFactory {
@@ -25,21 +25,26 @@ export class MongoConnectionFactory {
   private static async createConnection(
     mongoConfigService: MongoConfigService,
   ): Promise<Db> {
-    const config = mongoConfigService.getConfig();
-    const uri = this.createUri(config);
+    const database = mongoConfigService.get("database");
+    const uri = this.createUri(mongoConfigService);
     const client = new MongoClient(uri);
     await client.connect();
-    return client.db(config.database);
+    return client.db(database);
   }
 
-  private static createUri(config: MongoConfig): string {
+  private static createUri(mongoConfigService: MongoConfigService): string {
+    const host = mongoConfigService.get("host");
+    const port = mongoConfigService.get("port");
+    const username = mongoConfigService.get("username");
+    const password = mongoConfigService.get("password");
+
     let uri = "mongodb://";
 
-    if (config.username && config.password) {
-      uri += `${config.username}:${config.password}@`;
+    if (username && password) {
+      uri += `${username}:${password}@`;
     }
 
-    uri += `${config.host}:${config.port}`;
+    uri += `${host}:${port}`;
 
     return uri;
   }

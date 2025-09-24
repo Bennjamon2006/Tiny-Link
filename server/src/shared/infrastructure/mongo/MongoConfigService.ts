@@ -1,7 +1,7 @@
 import Injectable from "shared/decorators/Injectable";
 import ConfigService from "shared/domain/ConfigService";
 
-export type MongoConfig = {
+type MongoConfig = {
   host: string;
   port: number;
   database: string;
@@ -25,7 +25,7 @@ export default class MongoConfigService extends ConfigService<MongoConfig> {
     };
   }
 
-  public getConfig(): MongoConfig {
+  protected getConfig(): MongoConfig {
     return {
       host: process.env.MONGO_HOST,
       port: Number(process.env.MONGO_PORT),
