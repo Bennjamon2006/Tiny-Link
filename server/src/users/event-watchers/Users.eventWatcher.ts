@@ -15,6 +15,7 @@ export default class UsersEventWatcher {
   @OnEvent()
   public async onUserCreated(event: UserCreatedEvent) {
     const mail = new WelcomeUserMail({
+      from: "Tiny link Mail Service",
       to: event.payload.email,
       data: {
         username: event.payload.username,

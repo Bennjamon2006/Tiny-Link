@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/server/index.js",
   "scripts": {
-    "dev": "ts-node-dev src/server/index.ts",
+    "dev": "ts-node-dev  --env-file=.env src/server/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
@@ -16,6 +16,7 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "emailjs": "^4.0.3",
     "express": "^5.1.0",
     "module-alias": "^2.2.3",
     "mongodb": "^6.19.0",

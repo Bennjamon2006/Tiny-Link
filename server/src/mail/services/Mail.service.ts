@@ -13,6 +13,7 @@ export default class MailService {
     const body = template.render();
 
     await this.mailPort.sendMail({
+      from: mail.from,
       to: mail.to,
       subject: mail.subject,
       body,
