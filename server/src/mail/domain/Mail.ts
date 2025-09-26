@@ -13,12 +13,15 @@ export default abstract class Mail<T> {
 
   public readonly id: string;
 
+  public readonly type: string;
+
   constructor(data: MailData<T>) {
     this.from = data.from;
     this.to = data.to;
     this.subject = data.subject;
     this.data = data.data;
     this.id = uuid();
+    this.type = this.constructor.name;
   }
 
   public abstract getTemplateClass(): TemplateClass<T>;

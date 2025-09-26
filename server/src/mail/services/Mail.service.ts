@@ -19,6 +19,7 @@ export default class MailService {
       from: mail.from,
       to: mail.to,
       subject: mail.subject,
+      type: mail.type,
       body,
     });
   }

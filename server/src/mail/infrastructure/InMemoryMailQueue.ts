@@ -13,11 +13,15 @@ export default class InMemoryMailQueue implements MailQueue {
 
   private readonly timeout = 5000;
 
-  private pending: number = 0;
+  private readonly warnLimit = 30;
+
+  private pending = 0;
 
   private readonly queue: MailToSend[] = [];
 
   private readonly tries: Map<string, number> = new Map();
+
+  private failed = 0;
 
   constructor(
     @Inject("Mail.MailPort") private readonly mailPort: MailPort,
@@ -37,34 +41,49 @@ export default class InMemoryMailQueue implements MailQueue {
 
     const mail = this.queue.shift();
 
-    Promise.race([
-      this.mailPort.sendMail(mail),
-      new Promise((_, reject) => {
-        setTimeout(() => {
-          reject(new Error("Mail sent timeout exceded"));
-        }, this.timeout);
-      }),
-    ])
-      .catch((err) => {
-        const tries = this.tries.get(mail.id) || 0;
+    setTimeout(() => {
+      Promise.race([
+        this.mailPort.sendMail(mail),
+        new Promise((_, reject) => {
+          setTimeout(() => {
+            reject(new Error("Mail sent timeout exceded"));
+          }, this.timeout);
+        }),
+      ])
+        .then(() => {
+          this.failed = 0;
+        })
+        .catch((err) => {
+          this.failed++;
 
-        this.logger.error(
-          `Error sending mail ${mail.constructor.name} #${mail.id}: ${err.message}`,
-        );
+          if (this.failed >= this.warnLimit) {
+            this.logger.warn("Mail port likwely down");
+          }
 
-        if (tries < this.maxTries) {
-          this.tries.set(mail.id, tries + 1);
+          const tries = this.tries.get(mail.id) || 0;
 
-          this.queue.push(mail);
-        } else {
-          this.tries.delete(mail.id);
-        }
-      })
-      .finally(() => {
-        this.pending--;
-        this.trySend();
-      });
+          this.logger.error(
+            `Error sending mail ${mail.type} #${mail.id}: ${err.message}`,
+          );
 
-    this.pending++;
+          if (tries < this.maxTries) {
+            this.tries.set(mail.id, tries + 1);
+
+            this.queue.push(mail);
+          } else {
+            this.tries.delete(mail.id);
+          }
+        })
+        .finally(() => {
+          this.pending--;
+          this.trySend();
+        });
+
+      this.pending++;
+    }, this.getBackoff());
+  }
+
+  private getBackoff() {
+    return this.failed ? Math.min(60_000, 500 * 1.5 ** this.failed) : 0;
   }
 }

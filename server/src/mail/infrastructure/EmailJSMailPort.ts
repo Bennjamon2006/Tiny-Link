@@ -25,8 +25,6 @@ export default class EmailJSMailPort implements MailPort {
 
   public async sendMail(mail: MailToSend): Promise<void> {
     try {
-      console.log("Sending mail...");
-
       await this.client.sendAsync({
         from: mail.from,
         to: mail.to,
