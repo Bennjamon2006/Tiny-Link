@@ -1,6 +1,6 @@
 import Mail from "mail/domain/Mail";
 
-export type MailData<T> = Omit<Mail<T>, "getTemplateClass">;
+export type MailData<T> = Omit<Mail<T>, "getTemplateClass" | "id">;
 
 export type NoSubjectMailData<T> = Omit<MailData<T>, "subject">;
 

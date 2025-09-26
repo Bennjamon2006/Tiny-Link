@@ -3,6 +3,7 @@ import MailService from "./services/Mail.service";
 import MailCommandHandler from "./command-handlers/Mail.commandHandler";
 import EmailJSConfigService from "./infrastructure/EmailJSConfigService";
 import EmailJSMailPort from "./infrastructure/EmailJSMailPort";
+import InMemoryMailQueue from "./infrastructure/InMemoryMailQueue";
 
 @Domain({
   name: "Mail",
@@ -14,6 +15,7 @@ import EmailJSMailPort from "./infrastructure/EmailJSMailPort";
       },
     },
     EmailJSMailPort,
+    InMemoryMailQueue,
     MailService,
   ],
   commandHandlers: [MailCommandHandler],
