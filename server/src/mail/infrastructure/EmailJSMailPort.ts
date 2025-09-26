@@ -19,23 +19,25 @@ export default class EmailJSMailPort implements MailPort {
       password: this.emailjsConfigService.get("password"),
       host: this.emailjsConfigService.get("host"),
       ssl: this.emailjsConfigService.get("ssl"),
+      timeout: 5000,
     });
   }
 
   public async sendMail(mail: MailToSend): Promise<void> {
-    console.log({
-      from: mail.from,
-      to: mail.to,
-      subject: mail.subject,
-      text: mail.body,
-    });
-
     try {
+      console.log("Sending mail...");
+
       await this.client.sendAsync({
         from: mail.from,
         to: mail.to,
         subject: mail.subject,
         text: mail.body,
+        attachment: [
+          {
+            data: mail.body,
+            alternative: true,
+          },
+        ],
       });
     } catch (err) {
       throw new InternalServerError(`Error sending mail: ${err.message}`);

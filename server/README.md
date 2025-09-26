@@ -91,14 +91,13 @@ El sistema CQRS separa operaciones de **lectura** y **escritura** para mayor cla
 
 Permite comunicación desacoplada entre dominios y módulos, siguiendo principios de **Event-Driven Architecture (EDA)**.
 
-| Componente            | Responsabilidad                                                                             |
-| --------------------- | ------------------------------------------------------------------------------------------- |
-| `Event`               | Clase base para eventos; cada evento transporta un `payload` con información relevante.     |
-| `EventBus`            | Centraliza emisión de eventos y registro de listeners (`emit` y `emitSync`).                |
-| `EventWatcher`        | Escucha eventos y reacciona a ellos; se registra con `@EventWatcher`.                       |
-| `@OnEvent()`          | Decorador para métodos dentro de un `EventWatcher`; vincula el método a un tipo de `Event`. |
-| `ListenerData`        | Metadata que almacena la relación entre evento y método escuchador.                         |
-| `loadEventWatchers()` | Registra todos los `EventWatcher` y enlaza sus métodos al `EventBus`.                       |
+| Componente     | Responsabilidad                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| `Event`        | Clase base para eventos; cada evento transporta un `payload` con información relevante.     |
+| `EventBus`     | Centraliza emisión de eventos y registro de listeners (`emit` y `emitSync`).                |
+| `EventWatcher` | Escucha eventos y reacciona a ellos; se registra con `@EventWatcher`.                       |
+| `@OnEvent()`   | Decorador para métodos dentro de un `EventWatcher`; vincula el método a un tipo de `Event`. |
+| `ListenerData` | Metadata que almacena la relación entre evento y método escuchador.                         |
 
 **Ejemplo:**
 
