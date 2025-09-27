@@ -20,10 +20,11 @@ export default class ServerConfigService extends ConfigService<ServerConfig> {
   }
 
   protected getConfig(): ServerConfig {
+    const defaultConnfig = this.getDefaultConfig();
+
     return {
-      port: Number(process.env.SERVER_PORT),
-      host: process.env.SERVER_HOST,
-      ...this.getDefaultConfig(),
+      port: Number(process.env.SERVER_PORT) || defaultConnfig.port,
+      host: process.env.SERVER_HOST || defaultConnfig.host,
     };
   }
 }

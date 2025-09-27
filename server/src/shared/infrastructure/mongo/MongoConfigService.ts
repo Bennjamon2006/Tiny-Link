@@ -26,13 +26,14 @@ export default class MongoConfigService extends ConfigService<MongoConfig> {
   }
 
   protected getConfig(): MongoConfig {
+    const defaultConnfig = this.getDefaultConfig();
+
     return {
-      host: process.env.MONGO_HOST,
-      port: Number(process.env.MONGO_PORT),
-      database: process.env.MONGO_DATABASE,
-      username: process.env.MONGO_USERNAME,
-      password: process.env.MONGO_PASSWORD,
-      ...this.getDefaultConfig(),
+      host: process.env.MONGO_HOST || defaultConnfig.host,
+      port: Number(process.env.MONGO_PORT) || defaultConnfig.port,
+      database: process.env.MONGO_DATABASE || defaultConnfig.database,
+      username: process.env.MONGO_USERNAME || defaultConnfig.username,
+      password: process.env.MONGO_PASSWORD || defaultConnfig.password,
     };
   }
 }

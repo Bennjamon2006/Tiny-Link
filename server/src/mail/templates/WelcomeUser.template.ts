@@ -1,4 +1,4 @@
-import { EjsTemplate } from "./EJS.template";
+import { EjsTemplate } from "./Ejs.template";
 
 export default class WelcomeUserTemplate extends EjsTemplate<{
   username: string;
