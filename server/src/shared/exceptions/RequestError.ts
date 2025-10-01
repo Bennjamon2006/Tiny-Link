@@ -1,3 +1,5 @@
+import ErrorData from "shared/types/ErrorData";
+
 export default class RequestError extends Error {
   public static isRequestError(error: unknown): error is RequestError {
     return (
@@ -5,11 +7,15 @@ export default class RequestError extends Error {
     );
   }
 
-  public readonly statusCode: number;
-
-  constructor(message: string, statusCode: number) {
-    super(message);
+  constructor(
+    public readonly data: ErrorData,
+    public readonly statusCode: number,
+  ) {
+    super(typeof data === "string" ? data : JSON.stringify(data));
     this.name = "RequestError";
-    this.statusCode = statusCode;
+  }
+
+  toJSON() {
+    return this.message;
   }
 }

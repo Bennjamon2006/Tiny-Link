@@ -120,9 +120,11 @@ export default class Server {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (err: RequestError, req: Request, res: Response, next: NextFunction) => {
         if (err.statusCode !== 500) {
-          res.status(err.statusCode).json({ message: err.message });
+          res.status(err.statusCode).json({ error: err });
         } else {
-          console.error(err);
+          this.logger.error(
+            `Error while handling ${req.method} ${req.path}: ${err.message}`,
+          );
 
           res.status(500).json({ message: "Internal Server Error" });
         }

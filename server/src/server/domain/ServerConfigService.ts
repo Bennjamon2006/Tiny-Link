@@ -1,5 +1,8 @@
 import Injectable from "shared/decorators/Injectable";
 import ConfigService from "shared/domain/ConfigService";
+import { range } from "shared/schemas/number";
+import object from "shared/schemas/object";
+import string from "shared/schemas/string";
 
 type ServerConfig = {
   port: number;
@@ -9,22 +12,22 @@ type ServerConfig = {
 @Injectable()
 export default class ServerConfigService extends ConfigService<ServerConfig> {
   constructor() {
-    super();
+    super(
+      object({
+        port: range(0, 65535).int().default(3000),
+        host: string()
+          .match(
+            /^(?=.{1,253}$)(?!-)([a-zA-Z0-9-]{1,63})(\.(?!-)[a-zA-Z0-9-]{1,63})*$/,
+          )
+          .default("localhost"),
+      }),
+    );
   }
 
-  private getDefaultConfig(): ServerConfig {
+  protected getConfig() {
     return {
-      port: 3000,
-      host: "localhost",
-    };
-  }
-
-  protected getConfig(): ServerConfig {
-    const defaultConnfig = this.getDefaultConfig();
-
-    return {
-      port: Number(process.env.SERVER_PORT) || defaultConnfig.port,
-      host: process.env.SERVER_HOST || defaultConnfig.host,
+      port: process.env.SERVER_PORT,
+      host: process.env.SERVER_HOST,
     };
   }
 }

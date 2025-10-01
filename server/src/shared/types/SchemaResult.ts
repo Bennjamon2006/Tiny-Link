@@ -1,4 +1,4 @@
-import ValidationError from "./ValidationError";
+import ErrorData from "./ErrorData";
 
 type SchemaResult =
   | {
@@ -8,7 +8,7 @@ type SchemaResult =
   | {
       ok: false;
       value: any;
-      error: ValidationError;
+      error: ErrorData;
     };
 
 export default SchemaResult;

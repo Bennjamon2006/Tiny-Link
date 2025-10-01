@@ -6,3 +6,5 @@ type ParseCondition<C extends Condition<any, any>, T> = C extends (
 ) => true | string
   ? (...args: A) => T
   : never;
+
+export default ParseCondition;

@@ -1,6 +1,6 @@
 import Condition from "shared/types/Condition";
 import Schema from "shared/types/Schema";
-import ValidationError from "shared/types/ValidationError";
+import ErrorData from "shared/types/ErrorData";
 
 function buildSchema<T, O extends Record<string, Condition<T, any[]>> = {}>(
   options: O = {} as any,
@@ -12,7 +12,7 @@ function buildSchema<T, O extends Record<string, Condition<T, any[]>> = {}>(
     validate(value = defaultValue) {
       const arg = parser(value);
 
-      const errors: ValidationError = [];
+      const errors: ErrorData = [];
 
       for (const condidion of conditions) {
         const result = condidion(arg);
