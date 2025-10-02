@@ -30,10 +30,24 @@ export default function combine<
 
     (schemaObject as any)[key] = (...args: any[]) => {
       if (key in schema2) {
-        return combine(schema1[key](...args), schema2[key](...args) as any);
+        return combine(
+          schema1[key](...args) as any,
+          schema2[key](...args) as any,
+        );
       }
 
-      return combine(schema1[key](...args), schema2);
+      return combine(schema1[key](...args) as any, schema2);
+    };
+
+    (schemaObject as any)[key].not = (...args: any[]) => {
+      if (key in schema2) {
+        return combine(
+          schema1[key].not(...args) as any,
+          schema2[key].not(...args) as any,
+        );
+      }
+
+      return combine(schema1[key].not(...args) as any, schema2);
     };
   }
 
@@ -44,6 +58,9 @@ export default function combine<
 
     (schemaObject as any)[key] = (...args: any[]) =>
       combine(schema1, schema2[key](...args) as any);
+
+    (schemaObject as any)[key].not = (...args: any[]) =>
+      combine(schema1, schema2[key].not(...args) as any);
   }
 
   return schemaObject;

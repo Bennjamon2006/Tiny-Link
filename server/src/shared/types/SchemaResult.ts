@@ -1,13 +1,13 @@
 import ErrorData from "./ErrorData";
 
-type SchemaResult =
+type SchemaResult<T> =
   | {
       ok: true;
-      value: any;
+      value: T;
     }
   | {
       ok: false;
-      value: any;
+      value: T;
       error: ErrorData;
     };
 
