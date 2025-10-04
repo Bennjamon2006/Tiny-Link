@@ -15,10 +15,10 @@ type Base<
   E
 >;
 
-type DynamicSchema<
+export type DynamicSchema<
   T,
   O extends ConditionSet<T>,
-  E extends keyof O | "default",
+  E extends keyof O | "default" | "required",
 > = Base<T, O, E> & {
   [K in Exclude<keyof O, E>]: ParseCondition<O[K], DynamicSchema<T, O, E | K>>;
 };
