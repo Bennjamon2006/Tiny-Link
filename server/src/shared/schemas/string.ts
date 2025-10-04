@@ -34,3 +34,8 @@ const urlSchema = schema((arg: string, protocols = ["http", "https"]) => {
 
 export const url = (protocols?: string[]) =>
   combine(string(), urlSchema(protocols));
+
+export const host = () =>
+  string().match(
+    /^(?=.{1,253}$)(?!-)([a-zA-Z0-9-]{1,63})(\.(?!-)[a-zA-Z0-9-]{1,63})*$/,
+  );

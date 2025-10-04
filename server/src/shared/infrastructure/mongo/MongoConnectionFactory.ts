@@ -38,7 +38,7 @@ export class MongoConnectionFactory {
     const username = mongoConfigService.get("username");
     const password = mongoConfigService.get("password");
 
-    let uri = "mongodb://";
+    let uri = mongoConfigService.get("protocol");
 
     if (username && password) {
       uri += `${username}:${password}@`;
