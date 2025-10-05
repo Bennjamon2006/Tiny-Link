@@ -99,7 +99,7 @@ export default class UserToCreateValidator extends Validator {
     }
 
     // Validación simple de formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = ;
     if (!emailRegex.test(email)) {
       return "Email format is invalid";
     }

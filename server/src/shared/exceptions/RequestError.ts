@@ -16,6 +16,6 @@ export default class RequestError extends Error {
   }
 
   toJSON() {
-    return this.message;
+    return this.data;
   }
 }

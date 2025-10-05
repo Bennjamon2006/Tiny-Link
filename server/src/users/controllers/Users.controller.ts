@@ -5,7 +5,6 @@ import Response from "shared/classes/Response";
 import { Created, Ok } from "shared/classes/CustomResponses";
 import BodyValidator from "shared/middlewares/BodyValidator";
 import { ExposedUser, UserToCreate } from "users/models/User.dto";
-import UserToCreateValidator from "users/validators/UserToCreate.validator";
 import Inject from "shared/decorators/Inject";
 import CommandBus from "shared/domain/CommandBus";
 import QueryBus from "shared/domain/QueryBus";
@@ -13,6 +12,7 @@ import CreateUserCommand from "users/commands/CreateUser.command";
 import CreateSessionCommand from "auth/commands/CreateSession.command";
 import GetUserByIdQuery from "users/queries/GetUserById.query";
 import VerifyAuth from "auth/middlewares/VerifyAuth";
+import createUserSchema from "users/schemas/createUser.schema";
 
 @Controller("/users")
 export default class UsersController {
@@ -30,13 +30,9 @@ export default class UsersController {
     return new Ok(user);
   }
 
-  @Post("/", BodyValidator.use(UserToCreateValidator))
+  @Post("/", BodyValidator.useSchema(createUserSchema))
   public async createUser(req: Request): Promise<Response> {
-    const data: UserToCreate = {
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-    };
+    const data: UserToCreate = req.body;
 
     const autoLogin: boolean = req.body.autoLogin ?? true;
 

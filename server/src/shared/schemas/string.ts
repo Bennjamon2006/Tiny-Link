@@ -14,7 +14,6 @@ const string = schema(
     endsWith: (arg, suffix: string) =>
       arg.endsWith(suffix) || `Value must end with "${suffix}"`,
   },
-  (arg) => String(arg),
 );
 
 export default string;

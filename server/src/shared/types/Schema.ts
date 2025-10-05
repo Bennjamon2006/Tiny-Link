@@ -8,7 +8,7 @@ type Base<
   E extends keyof O | "default" | "required",
 > = Omit<
   {
-    validate(value?: any): SchemaResult<T>;
+    validate(value?: any, stopOnFirstError?: boolean): SchemaResult<T>;
     required(message?: string): DynamicSchema<T, O, E | "required">;
     default(defaultValue: T): DynamicSchema<T, O, E | "default">;
   },

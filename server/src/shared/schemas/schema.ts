@@ -10,17 +10,27 @@ function buildSchema<T, O extends Record<string, Condition<T, any[]>> = {}>(
   defaultValue?: T,
 ): Schema<T, O> {
   const schemaObject: Schema<T, O> = {
-    validate(value = defaultValue) {
+    validate(value = defaultValue, stopOnFirstError = false) {
       const arg = parser(value);
 
       const errors: ErrorData = [];
 
       for (const condidion of conditions) {
-        const result = condidion(arg);
+        try {
+          const result = condidion(arg);
 
-        if (result !== true) {
-          errors.push(result);
-        }
+          if (result !== true) {
+            if (stopOnFirstError) {
+              return {
+                ok: false,
+                error: result,
+                value: arg,
+              };
+            }
+
+            errors.push(result);
+          }
+        } catch (err) {}
       }
 
       if (errors.length === 0) {
@@ -39,7 +49,7 @@ function buildSchema<T, O extends Record<string, Condition<T, any[]>> = {}>(
     required(message) {
       const newConditions = [...conditions];
 
-      newConditions.push((arg) => {
+      newConditions.unshift((arg) => {
         return arg === undefined || arg === null
           ? (message ?? "Value is required")
           : true;

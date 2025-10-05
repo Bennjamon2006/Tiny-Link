@@ -1,9 +1,13 @@
 import ObjectSchemaPattern from "shared/types/ObjectSchemaPattern";
 import schema from "./schema";
 import ErrorData from "shared/types/ErrorData";
+import ObjectSchemaOptions from "shared/types/ObjectSchemaOptions";
 
-export default function object<T extends {}>(pattern: ObjectSchemaPattern<T>) {
-  return schema(
+export default function object<T extends {}>(
+  pattern: ObjectSchemaPattern<T>,
+  options?: ObjectSchemaOptions,
+) {
+  const schemaObject = schema(
     (arg: T) => {
       const errors: ErrorData = {};
       let ok = true;
@@ -12,7 +16,10 @@ export default function object<T extends {}>(pattern: ObjectSchemaPattern<T>) {
         const result = pattern[key].validate(arg[key]);
 
         if (result.ok === false) {
-          errors[key] = result.error;
+          errors[key] =
+            options?.stopInFirstError && Array.isArray(result.error)
+              ? result.error[0]
+              : result.error;
           ok = false;
         }
       }
@@ -51,4 +58,6 @@ export default function object<T extends {}>(pattern: ObjectSchemaPattern<T>) {
       return result;
     },
   )();
+
+  return schemaObject;
 }
