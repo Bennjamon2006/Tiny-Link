@@ -4,6 +4,6 @@ import Command from "./Command";
 import CommandResult from "shared/types/CommandResult";
 
 export default interface CommandBus {
-  registerHandler(queryType: CommandType, handler: CommandHandlerFN): void;
+  registerHandler(commandType: CommandType, handler: CommandHandlerFN): void;
   execute<C extends Command<any, any>>(command: C): Promise<CommandResult<C>>;
 }

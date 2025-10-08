@@ -12,7 +12,7 @@ import QueryBus from "shared/domain/QueryBus";
 import GetUserSessionsQuery from "auth/queries/GetUserSessions.query";
 import LogoutCommand from "auth/commands/Logout.command";
 import BodyValidator from "shared/middlewares/BodyValidator";
-import LoginDataValidator from "auth/validators/LoginData.validator";
+import loginDataSchema from "auth/schemas/loginData.schema";
 
 @Controller("/auth")
 export default class AuthController {
@@ -21,7 +21,7 @@ export default class AuthController {
     @Inject("Shared.QueryBus") private readonly queryBus: QueryBus,
   ) {}
 
-  @Post("/login", BodyValidator.use(LoginDataValidator))
+  @Post("/login", BodyValidator.useSchema(loginDataSchema))
   public async login(req: Request): Promise<Response> {
     const loginData: LoginData = {
       username: req.body.username,

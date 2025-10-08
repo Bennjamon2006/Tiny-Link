@@ -10,7 +10,7 @@ import GetUserLinksQuery from "links/queries/GetUserLinks.query";
 import CommandBus from "shared/domain/CommandBus";
 import CreateLinkCommand from "links/commands/CreateLink.command";
 import BodyValidator from "shared/middlewares/BodyValidator";
-import LinkToCreateValidator from "links/validators/LinkToCreate.validator";
+import createLinkSchema from "links/schemas/createLink.schema";
 
 @Controller("/links")
 export default class LinksController {
@@ -28,7 +28,7 @@ export default class LinksController {
     return new Ok(links);
   }
 
-  @Post("/", BodyValidator.use(LinkToCreateValidator), VerifyAuth.use(false))
+  @Post("/", BodyValidator.useSchema(createLinkSchema), VerifyAuth.use(false))
   public async createLink(req: Request): Promise<Response> {
     let userId = req.session?.userId;
     const { originalUrl, id } = req.body;

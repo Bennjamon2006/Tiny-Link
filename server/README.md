@@ -31,11 +31,11 @@ Mapper → Entity
 ### Componentes clave
 
 | Componente        | Responsabilidad                                                                                                                                  |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
 | `Entity`          | Representa entidades del dominio; maneja hooks `presave`, generación de `id` y timestamps.                                                       |
 | `Mapper`          | Convierte entre `Entity` y objetos de persistencia (`PersistenceUser`) o exposición (`ExposedUser`).                                             |
-| `Validator`       | Validaciones de negocio; subclases pueden funcionar como singletons con método estático `validate`.                                              |
-| `Middleware`      | Clases abstractas que pueden modificar `Request` o retornar un `Response`. Se integran con Express mediante `splitMiddlewares`.                  |
+| `schema`          | Esquemas que definen contratos de objetos de la aplicación. Se pueden usar para validar configuraciones externas, o datos de entrada.            |
+| `Middleware`      | Clases abstractas que pueden modificar `Request` o retornar un `Response`. Se integran con Express mediante                                      | `splitMiddlewares`. |
 | `Controller`      | Expone endpoints HTTP, recibe `Request` y devuelve `Response`.                                                                                   |
 | `Service`         | Contiene lógica de negocio, no conoce HTTP ni MongoDB.                                                                                           |
 | `Repository`      | Acceso a datos; transforma objetos de persistencia a entidades del dominio y viceversa.                                                          |
@@ -57,17 +57,27 @@ Mapper → Entity
 Ejemplo de uso:
 
 ```ts
-@Post("/", BodyValidator.use(UserToCreateValidator))
+@Post("/", BodyValidator.useSchema(createUserSchema))
 public async createUser(req: Request): Promise<Response> {
-  const data: UserToCreate = {
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-  };
+  const data: UserToCreate = req.body;
 
-  const created = await this.usersService.create(data);
+  const autoLogin: boolean = req.body.autoLogin ?? true;
 
-  return new Created(created);
+  const userId = await this.commandBus.execute(new CreateUserCommand(data));
+
+  if (autoLogin) {
+    const sessionId = await this.commandBus.execute(
+      new CreateSessionCommand({
+        userId,
+        ip: req.ip,
+        userAgent: req.headers["user-agent"],
+      }),
+    );
+
+    return new Created({ userId }, { session: sessionId });
+  }
+
+  return new Created({ userId });
 }
 ```
 

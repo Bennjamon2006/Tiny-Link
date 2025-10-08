@@ -21,7 +21,7 @@ export default function combine<
     }
 
     return true;
-  }) as unknown as Schema<T, O1 & O2>;
+  })();
 
   for (const key in schema1) {
     if (key === "default" || key === "validate") {
@@ -63,5 +63,5 @@ export default function combine<
       combine(schema1, schema2[key].not(...args) as any);
   }
 
-  return schemaObject;
+  return schemaObject as any;
 }
