@@ -4,6 +4,7 @@ import AuthDomain from "auth/Auth.domain";
 import ServerDomain from "server/Server.domain";
 import LinksDomain from "links/Links.domain";
 import MailDomain from "mail/Mail.domain";
+import UserTokensDomain from "user-tokens/UserTokens.domain";
 
 const domains = [
   SharedDomain,
@@ -11,6 +12,7 @@ const domains = [
   LinksDomain,
   AuthDomain,
   MailDomain,
+  UserTokensDomain,
   ServerDomain,
 ];
 
